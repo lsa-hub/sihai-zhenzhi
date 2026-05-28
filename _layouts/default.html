@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page.title | default: site.title }}</title>
+  <meta name="description" content="{{ page.description | default: site.description }}">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: #f8f9fb;
+      color: #2d3748;
+      line-height: 1.6;
+    }
+
+    /* Navigation */
+    .topbar {
+      background: #1a202c;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 2px solid #2d3748;
+    }
+    .topbar .logo {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+    .topbar .logo span { color: #a0aec0; font-weight: 400; font-size: 0.85rem; margin-left: 0.5rem; }
+    .topbar .gh-link {
+      font-size: 0.8rem;
+      color: #718096;
+      text-decoration: none;
+      padding: 0.3rem 0.8rem;
+      border: 1px solid #4a5568;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .topbar .gh-link:hover { color: #e2e8f0; border-color: #718096; }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      color: #fff;
+      text-align: center;
+      padding: 3rem 1.5rem;
+    }
+    .hero h1 { font-size: 2rem; font-weight: 700; letter-spacing: 0.04em; }
+    .hero p { color: #a0aec0; margin-top: 0.5rem; font-size: 1rem; }
+    .hero .stats {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    .hero .stat { text-align: center; }
+    .hero .stat-num { font-size: 1.6rem; font-weight: 700; color: #fff; }
+    .hero .stat-label { font-size: 0.75rem; color: #718096; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* Content */
+    .container { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem; }
+
+    .section { margin: 2.5rem 0; }
+
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #a0aec0;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #edf2f7;
+    }
+
+    /* Brand Grid */
+    .brand-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .brand-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 1.4rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .brand-card.cat-mens::before { background: #3182ce; }
+    .brand-card.cat-socks::before { background: #e53e3e; }
+    .brand-card.cat-kids::before { background: #38a169; }
+    .brand-card.cat-womens::before { background: #d69e2e; }
+
+    .brand-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+      border-color: #cbd5e0;
+      text-decoration: none;
+    }
+
+    .brand-card .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-card .brand-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #1a202c;
+    }
+    .brand-card .brand-name small {
+      font-weight: 400;
+      color: #a0aec0;
+      font-size: 0.78rem;
+    }
+
+    .brand-card .price-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #e53e3e;
+      background: #fff5f5;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    .brand-card .brand-desc {
+      color: #4a5568;
+      font-size: 0.88rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .brand-card .brand-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .brand-card .brand-tags span {
+      font-size: 0.7rem;
+      color: #718096;
+      background: #f7fafc;
+      border: 1px solid #edf2f7;
+      padding: 0.15rem 0.55rem;
+      border-radius: 4px;
+    }
+
+    .brand-card .arrow {
+      position: absolute;
+      bottom: 1.2rem;
+      right: 1.4rem;
+      color: #cbd5e0;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+    .brand-card:hover .arrow { color: #3182ce; transform: translateX(3px); }
+
+    /* Detail pages */
+    .detail-header {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      color: #fff;
+      padding: 2rem 1.5rem;
+    }
+    .detail-header .back-link {
+      color: #a0aec0;
+      font-size: 0.85rem;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+    .detail-header .back-link:hover { color: #fff; }
+    .detail-header h1 { font-size: 1.6rem; font-weight: 700; }
+
+    .brand-detail {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .brand-detail h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1a202c;
+      margin: 1.5rem 0 0.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid #edf2f7;
+    }
+    .brand-detail h3:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+
+    .brand-detail ul {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.3rem 1rem;
+    }
+    .brand-detail ul li {
+      padding: 0.25rem 0;
+      color: #4a5568;
+      font-size: 0.9rem;
+    }
+    .brand-detail ul li::before { content: '· '; color: #cbd5e0; font-weight: bold; }
+
+    .highlight-box {
+      background: #f7fafc;
+      border-left: 4px solid #3182ce;
+      padding: 0.8rem 1rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.8rem 0;
+      font-size: 0.92rem;
+      color: #2d3748;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    .site-footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+      color: #a0aec0;
+      font-size: 0.8rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 1.5rem; }
+      .hero .stats { gap: 1.2rem; }
+      .brand-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  {% if page.type == "detail" %}
+  <!-- Detail Page Header -->
+  <div class="detail-header">
+    <div class="container">
+      <a href="/sihai-zhenzhi/" class="back-link">← 返回首页</a>
+      <h1>{{ page.title }}</h1>
+    </div>
+  </div>
+  <main class="container">
+    {{ content }}
+  </main>
+  {% else %}
+  <!-- Homepage -->
+  <nav class="topbar">
+    <a href="/sihai-zhenzhi/" class="logo">四海针织<span>品牌参数库</span></a>
+    <a href="https://github.com/lsa-hub/sihai-zhenzhi" class="gh-link">GitHub</a>
+  </nav>
+
+  <header class="hero">
+    <h1>四海针织 · 品牌参数库</h1>
+    <p>针织批发店在售品牌的产品参数、卖点和客群数据</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">品牌</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">品类</div></div>
+      <div class="stat"><div class="stat-num">··</div><div class="stat-label">持续更新</div></div>
+    </div>
+  </header>
+
+  <main class="container">
+    {{ content }}
+  </main>
+  {% endif %}
+
+  <footer class="site-footer">
+    四海针织 &copy; {{ site.time | date: '%Y' }} · Powered by <a href="https://github.com/lsa-hub/sihai-zhenzhi">GitHub</a>
+  </footer>
+</body>
+</html>
