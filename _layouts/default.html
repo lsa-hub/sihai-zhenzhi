@@ -294,41 +294,54 @@
   </footer>
 
   <script>
-    // Count-up animation
+    // Count-up animation (replays on re-enter)
     const countEls=document.querySelectorAll('.stat-num[data-count]');
-    const observer=new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
+    const countTimers=new Map();
+    countEls.forEach(el=>{
+      const target=parseInt(el.dataset.count);
+      const observer=new IntersectionObserver(([entry])=>{
         if(entry.isIntersecting){
-          const el=entry.target;
-          const target=parseInt(el.dataset.count);
+          el.textContent='0';
           let current=0;
           const duration=1500;
           const step=Math.max(1,Math.floor(target/(duration/16)));
+          if(countTimers.has(el))clearInterval(countTimers.get(el));
           const timer=setInterval(()=>{
             current=Math.min(current+step,target);
             el.textContent=current;
-            if(current>=target)clearInterval(timer);
+            if(current>=target){clearInterval(timer);countTimers.delete(el);}
           },16);
-          observer.unobserve(el);
+          countTimers.set(el,timer);
+        }else{
+          if(countTimers.has(el)){clearInterval(countTimers.get(el));countTimers.delete(el);}
+          el.textContent='0';
         }
-      });
-    },{threshold:0.5});
-    countEls.forEach(el=>observer.observe(el));
+      },{threshold:0.5});
+      observer.observe(el);
+    });
 
-    // Scroll reveal
+    // Scroll reveal — toggles on every enter/exit for replay
     const revealObserver=new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
         if(entry.isIntersecting){
           entry.target.classList.add('visible');
+          // Re-apply stagger delay for cards
+          if(entry.target.classList.contains('card-reveal')){
+            const cards=Array.from(document.querySelectorAll('.card-reveal'));
+            const idx=cards.indexOf(entry.target);
+            if(idx>=0)entry.target.style.transitionDelay=(idx*0.06)+'s';
+          }
+        }else{
+          entry.target.classList.remove('visible');
         }
       });
-    },{threshold:0.15,rootMargin:'0px 0px -30px 0px'});
+    },{threshold:0.12,rootMargin:'0px 0px -20px 0px'});
 
     document.querySelectorAll('.reveal,.card-reveal').forEach(el=>revealObserver.observe(el));
 
-    // Card stagger effect on page load
+    // Initial stagger on page load
     document.querySelectorAll('.card-reveal').forEach((el,i)=>{
-      el.style.transitionDelay=(i*0.08)+'s';
+      el.style.transitionDelay=(i*0.06)+'s';
     });
   </script>
 </body>
