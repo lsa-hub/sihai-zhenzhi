@@ -218,48 +218,81 @@
   </footer>
 
   <script>
-    // Count-up — resets and replays on re-enter
-    document.querySelectorAll('.stat-num[data-count]').forEach(el=>{
-      const target=parseInt(el.dataset.count);
-      let timer=null;
-      const obs=new IntersectionObserver(([entry])=>{
-        if(entry.isIntersecting){
-          el.textContent='0';
-          let current=0;
-          const step=Math.max(1,Math.floor(target/(1500/16)));
-          if(timer)clearInterval(timer);
-          timer=setInterval(()=>{
-            current=Math.min(current+step,target);
-            el.textContent=current;
-            if(current>=target)clearInterval(timer);
-          },16);
-        }else{
-          if(timer){clearInterval(timer);timer=null;}
-          el.textContent='0';
-        }
-      },{threshold:0.5});
-      obs.observe(el);
-    });
+    // Count-up with rAF-based in-view detection
+    const statEls=[...document.querySelectorAll('.stat-num[data-count]')];
+    const statTimers=new Map();
+    let statInView=new Set();
 
-    // Reveal observer — removes class on exit so animation replays on re-enter
-    const ro=new IntersectionObserver((entries)=>{
-      entries.forEach(e=>{
-        if(e.isIntersecting){
-          // Remove then re-add to force animation restart
-          e.target.classList.remove('visible');
-          void e.target.offsetWidth; // force reflow
-          const delay=e.target.dataset.delay||0;
-          setTimeout(()=>e.target.classList.add('visible'),delay);
-        }else{
-          e.target.classList.remove('visible');
+    function checkStats(){
+      const vh=window.innerHeight;
+      statEls.forEach(el=>{
+        const r=el.getBoundingClientRect();
+        const inView=r.top<vh*0.8&&r.bottom>0;
+        if(inView&&!statInView.has(el)){
+          statInView.add(el);
+          const target=parseInt(el.dataset.count);
+          el.textContent='0';
+          let c=0;
+          const step=Math.max(1,Math.floor(target/(1200/16)));
+          if(statTimers.has(el))clearInterval(statTimers.get(el));
+          const t=setInterval(()=>{c=Math.min(c+step,target);el.textContent=c;if(c>=target)clearInterval(t);},16);
+          statTimers.set(el,t);
+        }else if(!inView&&statInView.has(el)){
+          statInView.delete(el);
+          if(statTimers.has(el)){clearInterval(statTimers.get(el));statTimers.delete(el);}
+          el.textContent='0';
         }
       });
-    },{threshold:0.1});
+    }
 
-    document.querySelectorAll('.reveal,.card-reveal').forEach((el,i)=>{
-      if(el.classList.contains('card-reveal'))el.dataset.delay=i*60;
-      ro.observe(el);
+    // Reveal — scroll-based, forcibly replays animation
+    const items=[...document.querySelectorAll('.reveal,.card-reveal')].map((el,i)=>{
+      el.dataset.rvidx=i; el.style.animationDelay='0s';
+      return el;
     });
+    const visibleItems=new Set();
+
+    function checkReveals(){
+      const vh=window.innerHeight;
+      const entering=[];
+      items.forEach(el=>{
+        const r=el.getBoundingClientRect();
+        const inView=r.top<vh*0.82&&r.bottom>vh*0.05;
+        if(inView&&!visibleItems.has(el)){
+          visibleItems.add(el);
+          entering.push(el);
+        }else if(!inView&&visibleItems.has(el)){
+          visibleItems.delete(el);
+          el.classList.remove('visible');
+        }
+      });
+      // Stagger entering items by index order
+      entering.sort((a,b)=>parseInt(a.dataset.rvidx)-parseInt(b.dataset.rvidx));
+      entering.forEach((el,i)=>{
+        setTimeout(()=>{
+          if(visibleItems.has(el)){
+            el.classList.remove('visible');
+            void el.offsetWidth;
+            el.classList.add('visible');
+          }
+        },i*55);
+      });
+    }
+
+    let ticking=false;
+    function onScroll(){
+      if(!ticking){
+        requestAnimationFrame(()=>{
+          checkStats();
+          checkReveals();
+          ticking=false;
+        });
+        ticking=true;
+      }
+    }
+    window.addEventListener('scroll',onScroll,{passive:true});
+    // initial check after layout
+    requestAnimationFrame(()=>{checkStats();checkReveals();});
   </script>
 </body>
 </html>
