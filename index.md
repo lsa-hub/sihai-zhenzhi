@@ -3,8 +3,8 @@ layout: default
 ---
 
 <div class="section">
-  <div class="section-label reveal">Category 01</div>
-  <h2 class="section-title reveal">男士内裤</h2>
+  <div class="sec-label reveal">Category 01</div>
+  <h2 class="sec-title reveal">男士内裤</h2>
   <div class="card-grid">
 
 <a href="/sihai-zhenzhi/brands/mens-underwear" class="card cat-mens card-reveal">
@@ -55,8 +55,8 @@ layout: default
 </div>
 
 <div class="section section-alt">
-  <div class="section-label reveal">Category 02</div>
-  <h2 class="section-title reveal">袜子</h2>
+  <div class="sec-label reveal">Category 02</div>
+  <h2 class="sec-title reveal">袜子</h2>
   <div class="card-grid">
 
 <a href="/sihai-zhenzhi/brands/socks" class="card cat-socks card-reveal">
@@ -118,8 +118,8 @@ layout: default
 </div>
 
 <div class="section">
-  <div class="section-label reveal">Category 03</div>
-  <h2 class="section-title reveal">儿童内裤</h2>
+  <div class="sec-label reveal">Category 03</div>
+  <h2 class="sec-title reveal">儿童内裤</h2>
   <div class="card-grid">
 
 <a href="/sihai-zhenzhi/brands/kids-underwear" class="card cat-kids card-reveal">
@@ -170,8 +170,8 @@ layout: default
 </div>
 
 <div class="section section-alt">
-  <div class="section-label reveal">Category 04</div>
-  <h2 class="section-title reveal">女士内衣 / 内裤</h2>
+  <div class="sec-label reveal">Category 04</div>
+  <h2 class="sec-title reveal">女士内衣 / 内裤</h2>
   <div class="card-grid">
 
 <a href="/sihai-zhenzhi/brands/womens-underwear" class="card cat-womens card-reveal">
@@ -244,8 +244,8 @@ layout: default
 </div>
 
 <div class="section">
-  <div class="section-label reveal">Category 05</div>
-  <h2 class="section-title reveal">家居服</h2>
+  <div class="sec-label reveal">Category 05</div>
+  <h2 class="sec-title reveal">家居服</h2>
   <div class="card-grid">
 
 <a href="/sihai-zhenzhi/brands/home-wear" class="card cat-mens card-reveal">
@@ -285,8 +285,8 @@ layout: default
 </div>
 
 <div class="section section-alt">
-  <div class="section-label reveal">Category 06</div>
-  <h2 class="section-title reveal">保暖内衣</h2>
+  <div class="sec-label reveal">Category 06</div>
+  <h2 class="sec-title reveal">保暖内衣</h2>
   <div class="card-grid">
 
 <a href="/sihai-zhenzhi/brands/thermal-underwear" class="card cat-womens card-reveal">
